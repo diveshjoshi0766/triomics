@@ -10,8 +10,8 @@ const TodoPost = ({ task, completePost }: Props) => {
   return (
     <div className="task">
       <div className="content">
-        <span>{task.name}</span>
-        <span>{task.description}</span>
+        <span className="context-box">{task.name}</span>
+        <span className="context-box">{task.description}</span>
       </div>
       <button
         onClick={() => {

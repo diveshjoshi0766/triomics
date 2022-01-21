@@ -9,8 +9,8 @@ const DraggableArea = ({ task }: Props) => {
     return (
         <div className="task">
         <div className="content">
-            <span>{arr[0]}</span>
-            <span>{arr[1]}</span>
+            <span className="context-box">{arr[0]}</span>
+            <span className="context-box">{arr[1]}</span>
         </div>
         </div>
     );

@@ -5,6 +5,13 @@ import TodoPost from "./Components/TodoPost";
 import DraggableArea from "./Components/DraggableArea";
 import { IEvent, IPost } from "./Interfaces";
 import axios from "axios";
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const App: FC = () => {
 
@@ -18,6 +25,15 @@ const App: FC = () => {
   const [content, setContent] = useState<string>("Drop something here");
   const [query, setQuery] = useState<string>("")
   const [activityQuery, setActivityQuery] = useState<string>("")
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   
   const eventCall = async () =>{
     await axios.get<IPost[]>("https://39480cf6-d2ac-44de-b113-ce52a5b8e509.mock.pstmn.io/api/events", {
@@ -68,6 +84,7 @@ const App: FC = () => {
     const newTask = {id: Math.floor(Math.random() * 1000) , name: name , description: description};
     console.log(newTask);
     setTodoEvent([...todoEvent, newTask])
+    handleClose();
     console.log(todoEvent);
   }
   
@@ -134,28 +151,45 @@ const App: FC = () => {
   return (
     <div className="App">
       <div className="header">
-        <div className="inputContainer">
-          <input
-            type="text"
-            placeholder="Name"
-            name="name "
-            value={name}
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="description"
-            name="description"
-            value={description}
-            onChange={handleChange}
-          />
-        </div>
-        <button onClick={addTask}>Add Task</button>
-        <button onClick={exportToJson}>Export</button>
+        <Button variant="contained" onClick={handleClickOpen}  style={{marginRight: "10vh"}}>Add Task</Button>
+          <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>Enter Details</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              type="text"
+              placeholder="Name"
+              name="name "
+              value={name}
+              onChange={handleChange}
+              fullWidth
+              variant="standard"
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              type="text"
+              placeholder="description"
+              name="description"
+              value={description}
+              onChange={handleChange}
+              fullWidth
+              variant="standard"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={addTask}>Add Task</Button>
+          </DialogActions>
+        </Dialog>
+        <Button variant="contained" onClick={exportToJson} style={{marginRight: "10vh"}}>Export</Button>
+        {/* <button onClick={exportToJson}>Export</button> */}
       </div>
       <div className="todoList">
         <div className="events">
-          <input placeholder="Event Search" onChange={(event) => setActivityQuery(event.target.value)}/>
+          {/* <input placeholder="Event Search" onChange={(event) => setActivityQuery(event.target.value)}/> */}
+          <TextField id="outlined-basic" variant="outlined" placeholder="Event Search" onChange={(event) => setActivityQuery(event.target.value)} style={{width: "100%", backgroundColor: "white", borderRadius: "10px", marginTop: "10px"}} />
           {posts
           .filter((post) => {
             if(activityQuery==""){
@@ -173,7 +207,8 @@ const App: FC = () => {
           <DraggableArea task={content}/>
         </div>
         <div className="activites">
-          <input placeholder="Activity Search" onChange={(event) => setQuery(event.target.value)}/>
+          {/* <input placeholder="Activity Search" onChange={(event) => setQuery(event.target.value)}/> */}
+          <TextField id="outlined-basic" variant="outlined" placeholder="Activity Search" onChange={(event) => setQuery(event.target.value)} style={{width: "100%", backgroundColor: "white", borderRadius: "10px", marginTop: "10px"}}/>
           {todoEvent
             .filter((event) => {
               if(query==""){
